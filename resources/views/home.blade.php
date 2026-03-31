@@ -24,8 +24,6 @@
                             <img src="{{ asset('frontend/images/thumoi.jpg') }}" alt="Thư mời">
                         </div>
                         <div class="invite-copy">
-                            <span class="invite-kicker">Đếm ngược</span>
-                            <h2 class="invite-title">Còn lại đến thời gian tham dự</h2>
                             <div
                                 class="countdown"
                                 data-countdown="2026-04-07T09:30:00+07:00"
@@ -48,7 +46,6 @@
                                     <span class="countdown-label">Giây</span>
                                 </div>
                             </div>
-                            <p class="invite-text">Thời gian tham dự: 09:30 ngày 07/04/2026.</p>
                         </div>
                     </div>
                 </div>
@@ -94,13 +91,12 @@
                             <label class="field-label visually-hidden" for="guest_count">Số lượng khách</label>
                             <input
                                 id="guest_count"
-                                class="guest-field form-control text-center"
-                                type="number"
+                                class="guest-field form-control"
+                                type="text"
                                 name="guest_count"
                                 min="1"
                                 max="20"
-                                value="{{ old('guest_count', 1) }}"
-                                aria-label="Số lượng người"
+                                placeholder="Số lượng người"
                             >
                         </div>
 
