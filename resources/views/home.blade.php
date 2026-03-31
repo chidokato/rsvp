@@ -115,7 +115,9 @@
                             CÔNG TY CỔ PHẦN BẤT ĐỘNG SẢN INDOCHINE
                         </div>
                         <div class="brand-hotline">
-                            <span class="brand-hotline-icon">📞</span>
+                            <span class="brand-hotline-icon">
+                                <img src="{{ asset('frontend/images/icon.png') }}" alt="Hotline">
+                            </span>
                             <span>0799 618 555</span>
                         </div>
                     </div>
