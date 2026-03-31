@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::view('/thumoi', 'thumoi')->name('thumoi');
 Route::post('/rsvp', [HomeController::class, 'storeRsvp'])->name('home.rsvp');
 Route::get('/login', function () {
     return redirect()->route('backend.admin.login');
