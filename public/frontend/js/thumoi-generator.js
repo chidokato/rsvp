@@ -15,7 +15,19 @@ document.addEventListener('DOMContentLoaded', function () {
     templateImage.src = previewRoot.getAttribute('data-template-src');
 
     var ctx = canvas.getContext('2d');
-    var generatedFileName = 'thu-moi.png';
+    var generatedFileName = 'thu-moi.jpg';
+
+    function isIOS() {
+        return /iPad|iPhone|iPod/.test(window.navigator.userAgent);
+    }
+
+    function canvasToBlob() {
+        return new Promise(function (resolve) {
+            canvas.toBlob(function (blob) {
+                resolve(blob);
+            }, 'image/jpeg', 0.95);
+        });
+    }
 
     function wrapText(context, text, maxWidth) {
         var words = text.trim().split(/\s+/);
@@ -105,18 +117,58 @@ document.addEventListener('DOMContentLoaded', function () {
         samplePreview.classList.add('d-none');
         canvas.classList.remove('d-none');
         downloadButton.disabled = false;
-        generatedFileName = 'thu-moi-' + fullName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.png';
+        generatedFileName = 'thu-moi-' + fullName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.jpg';
         showFeedback('Đã tạo thư mời thành công. Bạn có thể tải ảnh về máy.', 'success');
     });
 
-    downloadButton.addEventListener('click', function () {
+    downloadButton.addEventListener('click', async function () {
         if (downloadButton.disabled) {
             return;
         }
 
+        var blob = await canvasToBlob();
+
+        if (!blob) {
+            showFeedback('Không thể tạo file ảnh để tải xuống. Vui lòng thử lại.', 'warning');
+            return;
+        }
+
+        var file = new File([blob], generatedFileName, { type: 'image/jpeg' });
+
+        if (window.navigator.canShare && window.navigator.canShare({ files: [file] })) {
+            try {
+                await window.navigator.share({
+                    files: [file],
+                    title: 'Thư mời',
+                    text: 'Thư mời đã được tạo từ INDOCHINE'
+                });
+                return;
+            } catch (error) {
+                if (error && error.name === 'AbortError') {
+                    return;
+                }
+            }
+        }
+
+        var blobUrl = URL.createObjectURL(blob);
+
+        if (isIOS()) {
+            window.open(blobUrl, '_blank', 'noopener');
+            showFeedback('Ảnh đã được mở ở tab mới. Hãy nhấn giữ vào ảnh để lưu về máy.', 'success');
+            window.setTimeout(function () {
+                URL.revokeObjectURL(blobUrl);
+            }, 60000);
+            return;
+        }
+
         var link = document.createElement('a');
-        link.href = canvas.toDataURL('image/png');
+        link.href = blobUrl;
         link.download = generatedFileName;
+        document.body.appendChild(link);
         link.click();
+        link.remove();
+        window.setTimeout(function () {
+            URL.revokeObjectURL(blobUrl);
+        }, 1000);
     });
 });
