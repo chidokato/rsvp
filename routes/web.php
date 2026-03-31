@@ -3,6 +3,7 @@
 use App\Http\Controllers\Backend\AdminController;
 use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\ContentController;
+use App\Http\Controllers\Backend\GuestRegistrationController;
 use App\Http\Controllers\Backend\MenuController;
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\UserController;
@@ -80,6 +81,10 @@ Route::prefix('admin')->name('backend.')->group(function () {
         Route::resource('users', UserController::class)
             ->except(['show'])
             ->names('users');
+        Route::get('guest-registrations', [GuestRegistrationController::class, 'index'])
+            ->name('guest-registrations.index');
+        Route::delete('guest-registrations/{guestRegistration}', [GuestRegistrationController::class, 'destroy'])
+            ->name('guest-registrations.destroy');
 
         Route::post('uploads/editor-image', [ContentController::class, 'uploadEditorImage'])
             ->name('admin.uploads.editor-image');

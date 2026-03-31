@@ -193,13 +193,14 @@
                                 ['label' => 'Category', 'icon' => 'ri-list-check-2', 'route' => 'backend.categories.index'],
                                 ['label' => 'Product', 'icon' => 'ri-shopping-bag-3-line', 'route' => 'backend.products.index'],
                                 ['label' => 'News', 'icon' => 'ri-newspaper-line', 'route' => 'backend.news.index'],
+                                ['label' => 'Guest Registration', 'icon' => 'ri-user-heart-line', 'route' => 'backend.guest-registrations.index'],
                                 ['label' => 'Setting', 'icon' => 'ri-settings-3-line', 'route' => 'backend.settings.edit'],
                                 ['label' => 'User', 'icon' => 'ri-user-3-line', 'route' => 'backend.users.index'],
                             ];
                         @endphp
                         @foreach ($menuItems as $item)
                             <li class="nav-item">
-                                <a class="nav-link menu-link {{ $item['label'] === 'Menu' && request()->routeIs('backend.menus.*') ? 'active' : '' }} {{ $item['label'] === 'User' && request()->routeIs('backend.users.*') ? 'active' : '' }} {{ $item['label'] === 'Category' && request()->routeIs('backend.categories.*') ? 'active' : '' }} {{ $item['label'] === 'Product' && request()->routeIs('backend.products.*') ? 'active' : '' }} {{ $item['label'] === 'News' && request()->routeIs('backend.news.*') ? 'active' : '' }} {{ $item['label'] === 'Setting' && request()->routeIs('backend.settings.*') ? 'active' : '' }}" href="{{ $item['route'] ? route($item['route']) : '#' }}">
+                                <a class="nav-link menu-link {{ $item['label'] === 'Menu' && request()->routeIs('backend.menus.*') ? 'active' : '' }} {{ $item['label'] === 'User' && request()->routeIs('backend.users.*') ? 'active' : '' }} {{ $item['label'] === 'Category' && request()->routeIs('backend.categories.*') ? 'active' : '' }} {{ $item['label'] === 'Product' && request()->routeIs('backend.products.*') ? 'active' : '' }} {{ $item['label'] === 'News' && request()->routeIs('backend.news.*') ? 'active' : '' }} {{ $item['label'] === 'Guest Registration' && request()->routeIs('backend.guest-registrations.*') ? 'active' : '' }} {{ $item['label'] === 'Setting' && request()->routeIs('backend.settings.*') ? 'active' : '' }}" href="{{ $item['route'] ? route($item['route']) : '#' }}">
                                     <i class="{{ $item['icon'] }}"></i>
                                     <span>{{ $item['label'] }}</span>
                                 </a>

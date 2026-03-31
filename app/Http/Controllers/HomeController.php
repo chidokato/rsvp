@@ -62,6 +62,6 @@ class HomeController extends Controller
 
         return redirect()
             ->route('home')
-            ->with('rsvp_success', 'Thong tin xac nhan da duoc ghi nhan.');
+            ->with('rsvp_success', 'Thông tin xác nhận đã được ghi nhận.');
     }
 }
