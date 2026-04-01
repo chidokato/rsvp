@@ -65,8 +65,9 @@
 }
 
 .home-page .invite-card {
-    background: rgba(255, 255, 255, 0.92);
+    /*background: rgba(255, 255, 255, 0.92);*/
     box-shadow: 0 25px 60px rgba(4, 18, 53, 0.28);
+    background: linear-gradient(180deg, rgba(10, 44, 112, 0.98), rgba(8, 37, 96, 0.98));
 }
 
 .home-page .invite-media {
