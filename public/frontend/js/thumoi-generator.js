@@ -47,6 +47,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function blobToDataUrl(blob) {
+        return new Promise(function (resolve, reject) {
+            var reader = new FileReader();
+
+            reader.onloadend = function () {
+                resolve(reader.result);
+            };
+
+            reader.onerror = function () {
+                reject(new Error('Cannot read blob.'));
+            };
+
+            reader.readAsDataURL(blob);
+        });
+    }
+
     function wrapText(context, text, maxWidth) {
         var words = text.trim().split(/\s+/);
         var lines = [];
@@ -283,12 +299,24 @@ document.addEventListener('DOMContentLoaded', function () {
         var blobUrl = URL.createObjectURL(blob);
 
         if (isIOS()) {
-            window.open(blobUrl, '_blank', 'noopener');
-            showFeedback('Ảnh đã được mở ở tab mới. Hãy nhấn giữ vào ảnh để lưu về máy.', 'success');
-            window.setTimeout(function () {
+            try {
+                var dataUrl = await blobToDataUrl(blob);
+                var iosLink = document.createElement('a');
+                iosLink.href = dataUrl;
+                iosLink.download = generatedFileName;
+                document.body.appendChild(iosLink);
+                iosLink.click();
+                iosLink.remove();
+                showFeedback('Đã bắt đầu tải ảnh về máy.', 'success');
+                window.setTimeout(function () {
+                    URL.revokeObjectURL(blobUrl);
+                }, 1000);
+                return;
+            } catch (error) {
                 URL.revokeObjectURL(blobUrl);
-            }, 60000);
-            return;
+                showFeedback('Không thể tải trực tiếp trên thiết bị này. Vui lòng thử lại.', 'warning');
+                return;
+            }
         }
 
         var link = document.createElement('a');
