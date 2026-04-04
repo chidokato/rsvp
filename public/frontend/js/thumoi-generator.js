@@ -4,9 +4,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var samplePreview = document.getElementById('sample-preview');
     var canvas = document.getElementById('invitation-canvas');
     var feedback = document.getElementById('generator-feedback');
+    var generateButton = document.getElementById('generate-invitation') || (form ? form.querySelector('[type="submit"]') : null);
     var downloadButton = document.getElementById('download-invitation');
 
-    if (!form || !previewRoot || !samplePreview || !canvas || !feedback || !downloadButton) {
+    if (!form || !previewRoot || !samplePreview || !canvas || !feedback || !generateButton || !downloadButton) {
         return;
     }
 
@@ -18,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var filePrefix = previewRoot.getAttribute('data-file-prefix') || 'thu-moi';
     var generatorType = previewRoot.getAttribute('data-generator-type') || 'invitation';
     var generatedFileName = filePrefix + '.jpg';
+    var isGenerating = false;
 
     function isIOS() {
         return /iPad|iPhone|iPod/.test(window.navigator.userAgent);
@@ -25,9 +27,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function canvasToBlob() {
         return new Promise(function (resolve) {
-            canvas.toBlob(function (blob) {
-                resolve(blob);
-            }, 'image/jpeg', 0.95);
+            if (canvas.toBlob) {
+                canvas.toBlob(function (blob) {
+                    resolve(blob);
+                }, 'image/jpeg', 0.95);
+                return;
+            }
+
+            var dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+            var binary = atob(dataUrl.split(',')[1]);
+            var length = binary.length;
+            var bytes = new Uint8Array(length);
+
+            for (var i = 0; i < length; i += 1) {
+                bytes[i] = binary.charCodeAt(i);
+            }
+
+            resolve(new Blob([bytes], { type: 'image/jpeg' }));
         });
     }
 
@@ -73,9 +89,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         ctx.textAlign = 'center';
         ctx.fillStyle = '#ffffff';
-        ctx.font = '35px Montserrat, Arial, sans-serif';
-
         ctx.font = '60px Montserrat, Arial, sans-serif';
+
         var lines = wrapText(ctx, inviteeName, 900);
         var startY = 395;
         var lineHeight = 78;
@@ -116,11 +131,19 @@ document.addEventListener('DOMContentLoaded', function () {
             headers: {
                 'X-CSRF-TOKEN': formData.get('_token'),
                 'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json'
+                Accept: 'application/json'
             },
             body: formData
         }).then(function (response) {
-            return response.json().then(function (data) {
+            return response.text().then(function (text) {
+                var data = {};
+
+                try {
+                    data = text ? JSON.parse(text) : {};
+                } catch (error) {
+                    data = { message: 'Server response is invalid.' };
+                }
+
                 if (!response.ok) {
                     throw data;
                 }
@@ -130,8 +153,21 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    form.addEventListener('submit', function (event) {
-        event.preventDefault();
+    function finishGenerate(fileNameSeed) {
+        samplePreview.classList.add('d-none');
+        canvas.classList.remove('d-none');
+        downloadButton.disabled = false;
+        generatedFileName = filePrefix + '-' + slugify(fileNameSeed) + '.jpg';
+    }
+
+    function handleGenerate(event) {
+        if (event) {
+            event.preventDefault();
+        }
+
+        if (isGenerating) {
+            return;
+        }
 
         var fileNameSeed = '';
 
@@ -166,21 +202,20 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            isGenerating = true;
+            generateButton.disabled = true;
+            downloadButton.disabled = true;
+
             var formData = new FormData(form);
             formData.set('apartment_code', apartmentCode);
             formData.set('phone_last4', phoneLast4);
             formData.set('project_name', projectName);
 
-            downloadButton.disabled = true;
-
             postVoucher(formData)
                 .then(function (data) {
                     drawVoucher(apartmentCode, phoneLast4);
-                    samplePreview.classList.add('d-none');
-                    canvas.classList.remove('d-none');
-                    downloadButton.disabled = false;
                     fileNameSeed = apartmentCode + '-' + phoneLast4;
-                    generatedFileName = filePrefix + '-' + slugify(fileNameSeed) + '.jpg';
+                    finishGenerate(fileNameSeed);
                     showFeedback('Đã tạo voucher thành công. Mã: ' + data.voucher.voucher_code, 'success');
                 })
                 .catch(function (error) {
@@ -196,34 +231,42 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
                     showFeedback(message, 'warning');
+                })
+                .finally(function () {
+                    isGenerating = false;
+                    generateButton.disabled = false;
                 });
+
             return;
-        } else {
-            var salutation = form.querySelector('[name="salutation"]').value;
-            var fullName = form.querySelector('[name="full_name"]').value.trim();
-            var jobTitle = form.querySelector('[name="job_title"]').value.trim();
-
-            if (!fullName) {
-                showFeedback('Vui lòng nhập Họ và Tên trước khi tạo thư mời.', 'warning');
-                form.querySelector('[name="full_name"]').focus();
-                return;
-            }
-
-            if (!templateImage.complete) {
-                showFeedback('Phôi thư mời đang tải. Vui lòng thử lại sau vài giây.', 'warning');
-                return;
-            }
-
-            drawInvitation(salutation, fullName, jobTitle);
-            fileNameSeed = fullName;
-            showFeedback('Đã tạo thư mời thành công. Bạn có thể tải ảnh về máy.', 'success');
         }
 
-        samplePreview.classList.add('d-none');
-        canvas.classList.remove('d-none');
-        downloadButton.disabled = false;
-        generatedFileName = filePrefix + '-' + slugify(fileNameSeed) + '.jpg';
-    });
+        var salutation = form.querySelector('[name="salutation"]').value;
+        var fullName = form.querySelector('[name="full_name"]').value.trim();
+        var jobTitle = form.querySelector('[name="job_title"]').value.trim();
+
+        if (!fullName) {
+            showFeedback('Vui lòng nhập Họ và Tên trước khi tạo thư mời.', 'warning');
+            form.querySelector('[name="full_name"]').focus();
+            return;
+        }
+
+        if (!templateImage.complete) {
+            showFeedback('Phôi thư mời đang tải. Vui lòng thử lại sau vài giây.', 'warning');
+            return;
+        }
+
+        drawInvitation(salutation, fullName, jobTitle);
+        fileNameSeed = fullName;
+        finishGenerate(fileNameSeed);
+        showFeedback('Đã tạo thư mời thành công. Bạn có thể tải ảnh về máy.', 'success');
+    }
+
+    form.addEventListener('submit', handleGenerate);
+    generateButton.addEventListener('click', handleGenerate);
+    generateButton.addEventListener('touchend', function (event) {
+        event.preventDefault();
+        handleGenerate(event);
+    }, { passive: false });
 
     downloadButton.addEventListener('click', async function () {
         if (downloadButton.disabled) {

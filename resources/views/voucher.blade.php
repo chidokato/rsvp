@@ -59,7 +59,7 @@
                         </div>
 
                         <div class="action-row">
-                            <button type="submit" class="btn btn-primary action-button">Tạo voucher</button>
+                            <button type="button" id="generate-invitation" class="btn btn-primary action-button">Tạo voucher</button>
                             <button type="button" id="download-invitation" class="btn btn-outline-light action-button" disabled>Tải ảnh</button>
                         </div>
                     </form>
