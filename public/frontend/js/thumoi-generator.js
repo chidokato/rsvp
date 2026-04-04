@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var generatorType = previewRoot.getAttribute('data-generator-type') || 'invitation';
     var generatedFileName = filePrefix + '.jpg';
     var isGenerating = false;
+    var latestDataUrl = '';
 
     function canvasToBlob() {
         return new Promise(function (resolve) {
@@ -40,19 +41,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             resolve(new Blob([bytes], { type: 'image/jpeg' }));
-        });
-    }
-
-    function blobToDataUrl(blob) {
-        return new Promise(function (resolve, reject) {
-            var reader = new FileReader();
-            reader.onloadend = function () {
-                resolve(reader.result);
-            };
-            reader.onerror = function () {
-                reject(new Error('Cannot read blob.'));
-            };
-            reader.readAsDataURL(blob);
         });
     }
 
@@ -160,12 +148,21 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function refreshPreviewData() {
+        try {
+            latestDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+        } catch (error) {
+            latestDataUrl = '';
+        }
+    }
+
     function finishGenerate(fileNameSeed) {
         samplePreview.classList.add('d-none');
         canvas.classList.remove('d-none');
         downloadWebButton.disabled = false;
         downloadMobileButton.disabled = false;
         generatedFileName = filePrefix + '-' + slugify(fileNameSeed) + '.jpg';
+        refreshPreviewData();
     }
 
     function handleGenerate(event) {
@@ -270,14 +267,22 @@ document.addEventListener('DOMContentLoaded', function () {
         showFeedback('Đã tạo thư mời thành công. Bạn có thể tải ảnh về máy.', 'success');
     }
 
-    form.addEventListener('submit', handleGenerate);
-    generateButton.addEventListener('click', handleGenerate);
-    generateButton.addEventListener('touchend', function (event) {
-        event.preventDefault();
-        handleGenerate(event);
-    }, { passive: false });
+    function bindTap(button, handler) {
+        button.addEventListener('click', handler);
+        button.addEventListener('touchend', function (event) {
+            event.preventDefault();
+            handler(event);
+        }, { passive: false });
+    }
 
-    downloadWebButton.addEventListener('click', async function () {
+    bindTap(generateButton, handleGenerate);
+    form.addEventListener('submit', handleGenerate);
+
+    bindTap(downloadWebButton, async function (event) {
+        if (event) {
+            event.preventDefault();
+        }
+
         if (downloadWebButton.disabled) {
             return;
         }
@@ -301,30 +306,33 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 1000);
     });
 
-    downloadMobileButton.addEventListener('click', async function () {
+    bindTap(downloadMobileButton, function (event) {
+        if (event) {
+            event.preventDefault();
+        }
+
         if (downloadMobileButton.disabled) {
             return;
         }
 
-        var blob = await canvasToBlob();
+        if (!latestDataUrl) {
+            refreshPreviewData();
+        }
 
-        if (!blob) {
-            showFeedback('Không thể tạo file ảnh để mở trên mobile. Vui lòng thử lại.', 'warning');
+        if (!latestDataUrl) {
+            showFeedback('Không thể mở ảnh trên mobile. Vui lòng thử lại.', 'warning');
             return;
         }
 
-        try {
-            var dataUrl = await blobToDataUrl(blob);
-            var mobileLink = document.createElement('a');
-            mobileLink.href = dataUrl;
-            mobileLink.target = '_blank';
-            mobileLink.rel = 'noopener';
-            document.body.appendChild(mobileLink);
-            mobileLink.click();
-            mobileLink.remove();
-            showFeedback('Đã mở ảnh cho mobile. Sau đó bạn có thể lưu về máy.', 'success');
-        } catch (error) {
-            showFeedback('Không thể mở ảnh trên mobile. Vui lòng thử lại.', 'warning');
+        var mobileWindow = window.open('', '_blank');
+
+        if (!mobileWindow) {
+            window.location.href = latestDataUrl;
+            return;
         }
+
+        mobileWindow.document.write('<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><title>' + generatedFileName + '</title><style>html,body{margin:0;background:#111;height:100%;display:flex;align-items:center;justify-content:center}img{max-width:100%;height:auto}</style></head><body><img src="' + latestDataUrl + '" alt="voucher"></body></html>');
+        mobileWindow.document.close();
+        showFeedback('Đã mở ảnh cho mobile. Bạn có thể nhấn giữ để lưu vào Ảnh.', 'success');
     });
 });
