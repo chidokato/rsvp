@@ -22,10 +22,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var generatedFileName = filePrefix + '.jpg';
     var isGenerating = false;
 
-    function isIOS() {
-        return /iPad|iPhone|iPod/.test(window.navigator.userAgent);
-    }
-
     function canvasToBlob() {
         return new Promise(function (resolve) {
             if (canvas.toBlob) {
@@ -37,10 +33,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             var dataUrl = canvas.toDataURL('image/jpeg', 0.95);
             var binary = atob(dataUrl.split(',')[1]);
-            var length = binary.length;
-            var bytes = new Uint8Array(length);
+            var bytes = new Uint8Array(binary.length);
 
-            for (var i = 0; i < length; i += 1) {
+            for (var i = 0; i < binary.length; i += 1) {
                 bytes[i] = binary.charCodeAt(i);
             }
 
@@ -51,15 +46,12 @@ document.addEventListener('DOMContentLoaded', function () {
     function blobToDataUrl(blob) {
         return new Promise(function (resolve, reject) {
             var reader = new FileReader();
-
             reader.onloadend = function () {
                 resolve(reader.result);
             };
-
             reader.onerror = function () {
                 reject(new Error('Cannot read blob.'));
             };
-
             reader.readAsDataURL(blob);
         });
     }
@@ -103,7 +95,6 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
 
         var inviteeName = (salutation + ' ' + fullName).trim();
-
         ctx.textAlign = 'center';
         ctx.fillStyle = '#ffffff';
         ctx.font = '60px Montserrat, Arial, sans-serif';
@@ -128,7 +119,6 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
 
         var voucherCode = phoneLast4 + '-' + apartmentCode.toUpperCase();
-
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = '#6a281a';
@@ -287,8 +277,8 @@ document.addEventListener('DOMContentLoaded', function () {
         handleGenerate(event);
     }, { passive: false });
 
-    downloadButton.addEventListener('click', async function () {
-        if (downloadButton.disabled) {
+    downloadWebButton.addEventListener('click', async function () {
+        if (downloadWebButton.disabled) {
             return;
         }
 
@@ -300,28 +290,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         var blobUrl = URL.createObjectURL(blob);
-
-        if (isIOS()) {
-            try {
-                var dataUrl = await blobToDataUrl(blob);
-                var iosLink = document.createElement('a');
-                iosLink.href = dataUrl;
-                iosLink.download = generatedFileName;
-                document.body.appendChild(iosLink);
-                iosLink.click();
-                iosLink.remove();
-                showFeedback('Đã bắt đầu tải ảnh về máy.', 'success');
-                window.setTimeout(function () {
-                    URL.revokeObjectURL(blobUrl);
-                }, 1000);
-                return;
-            } catch (error) {
-                URL.revokeObjectURL(blobUrl);
-                showFeedback('Không thể tải trực tiếp trên thiết bị này. Vui lòng thử lại.', 'warning');
-                return;
-            }
-        }
-
         var link = document.createElement('a');
         link.href = blobUrl;
         link.download = generatedFileName;
@@ -331,5 +299,32 @@ document.addEventListener('DOMContentLoaded', function () {
         window.setTimeout(function () {
             URL.revokeObjectURL(blobUrl);
         }, 1000);
+    });
+
+    downloadMobileButton.addEventListener('click', async function () {
+        if (downloadMobileButton.disabled) {
+            return;
+        }
+
+        var blob = await canvasToBlob();
+
+        if (!blob) {
+            showFeedback('Không thể tạo file ảnh để mở trên mobile. Vui lòng thử lại.', 'warning');
+            return;
+        }
+
+        try {
+            var dataUrl = await blobToDataUrl(blob);
+            var mobileLink = document.createElement('a');
+            mobileLink.href = dataUrl;
+            mobileLink.target = '_blank';
+            mobileLink.rel = 'noopener';
+            document.body.appendChild(mobileLink);
+            mobileLink.click();
+            mobileLink.remove();
+            showFeedback('Đã mở ảnh cho mobile. Sau đó bạn có thể lưu về máy.', 'success');
+        } catch (error) {
+            showFeedback('Không thể mở ảnh trên mobile. Vui lòng thử lại.', 'warning');
+        }
     });
 });
