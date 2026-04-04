@@ -17,7 +17,7 @@
             <section class="form-panel">
                 <div class="form-card">
                     <h2 class="form-title">Tạo voucher</h2>
-                    <p class="form-text">Nhập mã căn, 4 số cuối số điện thoại và tên dự án đã mua rồi bấm tạo voucher. Sau đó có thể tải ảnh đã tạo về máy.</p>
+                    <p class="form-text">Quý Khách vui lòng nhập các thông tin dưới đây, sau đó bấm "Tạo Voucher" và lưu mã Voucher về máy. Chúc Quý Khách có những trải nghiệm trọn vẹn tại Asia Town</p>
 
                     <form id="invitation-form" class="invitation-form" action="{{ route('voucher.store') }}" method="post">
                         @csrf

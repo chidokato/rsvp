@@ -237,27 +237,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        var shareTitle = generatorType === 'voucher' ? 'Voucher' : 'Thư mời';
-        var shareText = generatorType === 'voucher'
-            ? 'Voucher đã được tạo thành công'
-            : 'Thư mời đã được tạo thành công';
-        var file = new File([blob], generatedFileName, { type: 'image/jpeg' });
-
-        if (window.navigator.canShare && window.navigator.canShare({ files: [file] })) {
-            try {
-                await window.navigator.share({
-                    files: [file],
-                    title: shareTitle,
-                    text: shareText
-                });
-                return;
-            } catch (error) {
-                if (error && error.name === 'AbortError') {
-                    return;
-                }
-            }
-        }
-
         var blobUrl = URL.createObjectURL(blob);
 
         if (isIOS()) {
