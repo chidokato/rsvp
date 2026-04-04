@@ -60,8 +60,8 @@
 
                         <div class="action-row">
                             <button type="button" id="generate-invitation" class="btn btn-primary action-button">Tạo voucher</button>
-                            <button type="button" id="download-web" class="btn btn-outline-light action-button" disabled>Tải cho web</button>
-                            <button type="button" id="download-mobile" class="btn btn-outline-light action-button" disabled>Mở cho mobile</button>
+                            <button type="button" id="download-web" class="btn btn-outline-light action-button web-only-action" disabled>Tải cho web</button>
+                            <button type="button" id="download-mobile" class="btn btn-outline-light action-button mobile-only-action" disabled>Mở cho mobile</button>
                         </div>
                     </form>
 

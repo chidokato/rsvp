@@ -217,6 +217,10 @@
     opacity: 0.55;
 }
 
+.mobile-only-action {
+    display: none;
+}
+
 #generator-feedback {
     border-radius: 14px;
 }
@@ -232,6 +236,14 @@
 }
 
 @media (max-width: 576px) {
+    .web-only-action {
+        display: none;
+    }
+
+    .mobile-only-action {
+        display: inline-flex;
+    }
+
     .voucher-page .generator-shell {
         padding-left: 8px !important;
         padding-right: 8px !important;
