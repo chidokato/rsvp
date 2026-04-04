@@ -5,9 +5,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var canvas = document.getElementById('invitation-canvas');
     var feedback = document.getElementById('generator-feedback');
     var generateButton = document.getElementById('generate-invitation') || (form ? form.querySelector('[type="submit"]') : null);
-    var downloadButton = document.getElementById('download-invitation');
+    var downloadWebButton = document.getElementById('download-web');
+    var downloadMobileButton = document.getElementById('download-mobile');
 
-    if (!form || !previewRoot || !samplePreview || !canvas || !feedback || !generateButton || !downloadButton) {
+    if (!form || !previewRoot || !samplePreview || !canvas || !feedback || !generateButton || !downloadWebButton || !downloadMobileButton) {
         return;
     }
 
@@ -172,7 +173,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function finishGenerate(fileNameSeed) {
         samplePreview.classList.add('d-none');
         canvas.classList.remove('d-none');
-        downloadButton.disabled = false;
+        downloadWebButton.disabled = false;
+        downloadMobileButton.disabled = false;
         generatedFileName = filePrefix + '-' + slugify(fileNameSeed) + '.jpg';
     }
 
@@ -220,7 +222,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             isGenerating = true;
             generateButton.disabled = true;
-            downloadButton.disabled = true;
+            downloadWebButton.disabled = true;
+            downloadMobileButton.disabled = true;
 
             var formData = new FormData(form);
             formData.set('apartment_code', apartmentCode);
