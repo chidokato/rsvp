@@ -225,13 +225,41 @@
     .generator-layout {
         grid-template-columns: 1fr;
     }
+
+    .voucher-page .preview-panel {
+        order: -1;
+    }
 }
 
 @media (max-width: 576px) {
+    .voucher-page .generator-shell {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
     .preview-card,
     .form-card {
         padding: 18px;
         border-radius: 22px;
+    }
+
+    .voucher-page .preview-card {
+        padding: 8px;
+        border-radius: 18px;
+    }
+
+    .voucher-page .voucher-preview-stack {
+        gap: 10px !important;
+        padding: 0 !important;
+    }
+
+    .voucher-page .invitation-preview {
+        border-radius: 16px;
+    }
+
+    .voucher-page .preview-image,
+    .voucher-page .preview-canvas {
+        width: 100%;
     }
 
     .action-row {

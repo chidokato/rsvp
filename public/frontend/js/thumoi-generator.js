@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = '#6a281a';
-        ctx.font = '700 42px Montserrat, Arial, sans-serif';
+        ctx.font = '700 48px Montserrat, Arial, sans-serif';
         ctx.fillText(voucherCode, 1610, 94);
     }
 

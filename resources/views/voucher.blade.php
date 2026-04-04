@@ -70,7 +70,7 @@
 
             <section class="preview-panel">
                 <div class="preview-card">
-                    <div class="d-grid gap-3 p-3">
+                    <div class="voucher-preview-stack d-grid gap-3 p-3">
                         <div class="invitation-preview">
                             <img
                                 src="{{ asset('frontend/images/voucher1.jpg') }}"
