@@ -14,6 +14,11 @@
     <link href="{{ asset('admin-assets/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('frontend/css/home.css') }}" rel="stylesheet">
 </head>
+@php
+    $socialMap = collect($setting?->social ?? [])->mapWithKeys(function ($item) {
+        return [strtolower($item['label'] ?? '') => $item['url'] ?? ''];
+    });
+@endphp
 <body class="home-page">
     <main class="page">
         <section class="invitation container-xxl position-relative">
@@ -114,6 +119,11 @@
                         <div class="brand-company">
                             CÔNG TY CỔ PHẦN BẤT ĐỘNG SẢN INDOCHINE
                         </div>
+                        @if ($socialMap->get('voucher'))
+                            <a href="{{ $socialMap->get('voucher') }}" class="brand-voucher" target="_blank" rel="noopener noreferrer">
+                                Nháº­n voucher
+                            </a>
+                        @endif
                         <div class="brand-hotline">
                             <span class="brand-hotline-icon">
                                 <img src="{{ asset('frontend/images/icon.png') }}" alt="Hotline">

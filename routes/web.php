@@ -7,7 +7,9 @@ use App\Http\Controllers\Backend\GuestRegistrationController;
 use App\Http\Controllers\Backend\MenuController;
 use App\Http\Controllers\Backend\SettingController;
 use App\Http\Controllers\Backend\UserController;
+use App\Http\Controllers\Backend\VoucherController as BackendVoucherController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\VoucherController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,6 +25,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::view('/thumoi', 'thumoi')->name('thumoi');
+Route::view('/voucher', 'voucher')->name('voucher');
+Route::post('/voucher', [VoucherController::class, 'store'])->name('voucher.store');
 Route::post('/rsvp', [HomeController::class, 'storeRsvp'])->name('home.rsvp');
 Route::get('/login', function () {
     return redirect()->route('backend.admin.login');
@@ -86,6 +90,10 @@ Route::prefix('admin')->name('backend.')->group(function () {
             ->name('guest-registrations.index');
         Route::delete('guest-registrations/{guestRegistration}', [GuestRegistrationController::class, 'destroy'])
             ->name('guest-registrations.destroy');
+        Route::get('vouchers', [BackendVoucherController::class, 'index'])
+            ->name('vouchers.index');
+        Route::delete('vouchers/{voucher}', [BackendVoucherController::class, 'destroy'])
+            ->name('vouchers.destroy');
 
         Route::post('uploads/editor-image', [ContentController::class, 'uploadEditorImage'])
             ->name('admin.uploads.editor-image');

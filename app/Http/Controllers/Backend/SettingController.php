@@ -28,6 +28,7 @@ class SettingController extends Controller
             'hotline' => ['nullable', 'string', 'max:50'],
             'facebook' => ['nullable', 'url', 'max:255'],
             'youtube' => ['nullable', 'url', 'max:255'],
+            'voucher' => ['nullable', 'url', 'max:255'],
             'logo_file' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:2048'],
             'footer_logo_file' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:2048'],
             'favicon_file' => ['nullable', 'image', 'mimes:jpg,jpeg,png,ico,webp', 'max:1024'],
@@ -58,7 +59,7 @@ class SettingController extends Controller
     {
         $items = [];
 
-        foreach (['facebook' => 'Facebook', 'youtube' => 'Youtube'] as $key => $label) {
+        foreach (['facebook' => 'Facebook', 'youtube' => 'Youtube', 'voucher' => 'Voucher'] as $key => $label) {
             if (! empty($validated[$key])) {
                 $items[] = [
                     'label' => $label,

@@ -15,7 +15,9 @@ document.addEventListener('DOMContentLoaded', function () {
     templateImage.src = previewRoot.getAttribute('data-template-src');
 
     var ctx = canvas.getContext('2d');
-    var generatedFileName = 'thu-moi.jpg';
+    var filePrefix = previewRoot.getAttribute('data-file-prefix') || 'thu-moi';
+    var generatorType = previewRoot.getAttribute('data-generator-type') || 'invitation';
+    var generatedFileName = filePrefix + '.jpg';
 
     function isIOS() {
         return /iPad|iPhone|iPod/.test(window.navigator.userAgent);
@@ -54,6 +56,15 @@ document.addEventListener('DOMContentLoaded', function () {
         return lines;
     }
 
+    function slugify(text) {
+        return text
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '');
+    }
+
     function drawInvitation(salutation, fullName, jobTitle) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
@@ -63,7 +74,6 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.textAlign = 'center';
         ctx.fillStyle = '#ffffff';
         ctx.font = '35px Montserrat, Arial, sans-serif';
-        // ctx.fillText('Trân trọng kính mời', canvas.width / 2, 215);
 
         ctx.font = '60px Montserrat, Arial, sans-serif';
         var lines = wrapText(ctx, inviteeName, 900);
@@ -79,14 +89,19 @@ document.addEventListener('DOMContentLoaded', function () {
             ctx.fillStyle = 'rgba(233, 241, 255, 0.94)';
             ctx.fillText(jobTitle, canvas.width / 2, startY + (lines.length * lineHeight) - 24);
         }
+    }
 
-        ctx.font = '500 32px Montserrat, Arial, sans-serif';
-        ctx.fillStyle = 'rgba(233, 241, 255, 0.94)';
-        // ctx.fillText(
-        //     'đến tham dự sự kiện cùng INDOCHINE',
-        //     canvas.width / 2,
-        //     startY + (lines.length * lineHeight) + (jobTitle ? 52 : 12)
-        // );
+    function drawVoucher(apartmentCode, phoneLast4) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
+
+        var voucherCode = phoneLast4 + '-' + apartmentCode.toUpperCase();
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#6a281a';
+        ctx.font = '700 42px Montserrat, Arial, sans-serif';
+        ctx.fillText(voucherCode, 1610, 94);
     }
 
     function showFeedback(message, type) {
@@ -95,30 +110,119 @@ document.addEventListener('DOMContentLoaded', function () {
         feedback.textContent = message;
     }
 
+    function postVoucher(formData) {
+        return fetch(form.getAttribute('action'), {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': formData.get('_token'),
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            },
+            body: formData
+        }).then(function (response) {
+            return response.json().then(function (data) {
+                if (!response.ok) {
+                    throw data;
+                }
+
+                return data;
+            });
+        });
+    }
+
     form.addEventListener('submit', function (event) {
         event.preventDefault();
 
-        var salutation = form.querySelector('[name="salutation"]').value;
-        var fullName = form.querySelector('[name="full_name"]').value.trim();
-        var jobTitle = form.querySelector('[name="job_title"]').value.trim();
+        var fileNameSeed = '';
 
-        if (!fullName) {
-            showFeedback('Vui lòng nhập Họ và Tên trước khi tạo thư mời.', 'warning');
-            form.querySelector('[name="full_name"]').focus();
+        if (generatorType === 'voucher') {
+            var apartmentCode = form.querySelector('[name="apartment_code"]').value.trim();
+            var phoneLast4Input = form.querySelector('[name="phone_last4"]');
+            var phoneLast4 = phoneLast4Input.value.replace(/\D/g, '').slice(0, 4);
+            var projectName = form.querySelector('[name="project_name"]').value.trim();
+
+            phoneLast4Input.value = phoneLast4;
+
+            if (!apartmentCode) {
+                showFeedback('Vui lòng nhập mã căn trước khi tạo voucher.', 'warning');
+                form.querySelector('[name="apartment_code"]').focus();
+                return;
+            }
+
+            if (phoneLast4.length !== 4) {
+                showFeedback('Vui lòng nhập đúng 4 số cuối số điện thoại.', 'warning');
+                phoneLast4Input.focus();
+                return;
+            }
+
+            if (!projectName) {
+                showFeedback('Vui lòng nhập tên dự án đã mua.', 'warning');
+                form.querySelector('[name="project_name"]').focus();
+                return;
+            }
+
+            if (!templateImage.complete) {
+                showFeedback('Ảnh voucher đang tải. Vui lòng thử lại sau vài giây.', 'warning');
+                return;
+            }
+
+            var formData = new FormData(form);
+            formData.set('apartment_code', apartmentCode);
+            formData.set('phone_last4', phoneLast4);
+            formData.set('project_name', projectName);
+
+            downloadButton.disabled = true;
+
+            postVoucher(formData)
+                .then(function (data) {
+                    drawVoucher(apartmentCode, phoneLast4);
+                    samplePreview.classList.add('d-none');
+                    canvas.classList.remove('d-none');
+                    downloadButton.disabled = false;
+                    fileNameSeed = apartmentCode + '-' + phoneLast4;
+                    generatedFileName = filePrefix + '-' + slugify(fileNameSeed) + '.jpg';
+                    showFeedback('Đã tạo voucher thành công. Mã: ' + data.voucher.voucher_code, 'success');
+                })
+                .catch(function (error) {
+                    var message = 'Không thể lưu voucher. Vui lòng thử lại.';
+
+                    if (error && error.errors) {
+                        var firstKey = Object.keys(error.errors)[0];
+                        if (firstKey && error.errors[firstKey] && error.errors[firstKey][0]) {
+                            message = error.errors[firstKey][0];
+                        }
+                    } else if (error && error.message) {
+                        message = error.message;
+                    }
+
+                    showFeedback(message, 'warning');
+                });
             return;
+        } else {
+            var salutation = form.querySelector('[name="salutation"]').value;
+            var fullName = form.querySelector('[name="full_name"]').value.trim();
+            var jobTitle = form.querySelector('[name="job_title"]').value.trim();
+
+            if (!fullName) {
+                showFeedback('Vui lòng nhập Họ và Tên trước khi tạo thư mời.', 'warning');
+                form.querySelector('[name="full_name"]').focus();
+                return;
+            }
+
+            if (!templateImage.complete) {
+                showFeedback('Phôi thư mời đang tải. Vui lòng thử lại sau vài giây.', 'warning');
+                return;
+            }
+
+            drawInvitation(salutation, fullName, jobTitle);
+            fileNameSeed = fullName;
+            showFeedback('Đã tạo thư mời thành công. Bạn có thể tải ảnh về máy.', 'success');
         }
 
-        if (!templateImage.complete) {
-            showFeedback('Phôi thư mời đang tải. Vui lòng thử lại sau vài giây.', 'warning');
-            return;
-        }
-
-        drawInvitation(salutation, fullName, jobTitle);
         samplePreview.classList.add('d-none');
         canvas.classList.remove('d-none');
         downloadButton.disabled = false;
-        generatedFileName = 'thu-moi-' + fullName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.jpg';
-        showFeedback('Đã tạo thư mời thành công. Bạn có thể tải ảnh về máy.', 'success');
+        generatedFileName = filePrefix + '-' + slugify(fileNameSeed) + '.jpg';
     });
 
     downloadButton.addEventListener('click', async function () {
@@ -133,14 +237,18 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
+        var shareTitle = generatorType === 'voucher' ? 'Voucher' : 'Thư mời';
+        var shareText = generatorType === 'voucher'
+            ? 'Voucher đã được tạo thành công'
+            : 'Thư mời đã được tạo thành công';
         var file = new File([blob], generatedFileName, { type: 'image/jpeg' });
 
         if (window.navigator.canShare && window.navigator.canShare({ files: [file] })) {
             try {
                 await window.navigator.share({
                     files: [file],
-                    title: 'Thư mời',
-                    text: 'Thư mời đã được tạo từ INDOCHINE'
+                    title: shareTitle,
+                    text: shareText
                 });
                 return;
             } catch (error) {

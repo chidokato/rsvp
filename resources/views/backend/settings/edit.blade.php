@@ -25,7 +25,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                         <div class="mb-3">
                             <label for="company_name" class="form-label">Ten cty</label>
                             <input type="text" id="company_name" name="company_name" class="form-control @error('company_name') is-invalid @enderror" value="{{ old('company_name', $setting->company_name) }}">
@@ -84,11 +84,21 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-6">
-                        <div class="mb-0">
+                    <div class="col-lg-4">
+                        <div class="mb-3">
                             <label for="youtube" class="form-label">Youtube</label>
                             <input type="url" id="youtube" name="youtube" class="form-control @error('youtube') is-invalid @enderror" value="{{ old('youtube', $socialMap->get('youtube')) }}" placeholder="https://youtube.com/@your-channel">
                             @error('youtube')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="mb-0">
+                            <label for="voucher" class="form-label">Voucher</label>
+                            <input type="url" id="voucher" name="voucher" class="form-control @error('voucher') is-invalid @enderror" value="{{ old('voucher', $socialMap->get('voucher')) }}" placeholder="https://example.com/voucher">
+                            @error('voucher')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
