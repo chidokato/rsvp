@@ -8,11 +8,11 @@
     <meta content="NhaDatVN" name="author" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" href="{{ asset('admin-assets/images/favicon.ico') }}">
-    <script src="{{ asset('admin-assets/js/layout.js') }}"></script>
-    <link href="{{ asset('admin-assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('admin-assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('admin-assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('admin-assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
+    <script src="@assetv('admin-assets/js/layout.js')"></script>
+    <link href="@assetv('admin-assets/css/bootstrap.min.css')" rel="stylesheet" type="text/css" />
+    <link href="@assetv('admin-assets/css/icons.min.css')" rel="stylesheet" type="text/css" />
+    <link href="@assetv('admin-assets/css/app.min.css')" rel="stylesheet" type="text/css" />
+    <link href="@assetv('admin-assets/css/custom.min.css')" rel="stylesheet" type="text/css" />
     <style>
         .app-search .form-control {
             min-width: 240px;
@@ -261,15 +261,15 @@
         <i class="ri-arrow-up-line"></i>
     </button>
 
-    <script src="{{ asset('admin-assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('admin-assets/libs/simplebar/simplebar.min.js') }}"></script>
-    <script src="{{ asset('admin-assets/libs/node-waves/waves.min.js') }}"></script>
-    <script src="{{ asset('admin-assets/libs/feather-icons/feather.min.js') }}"></script>
+    <script src="@assetv('admin-assets/libs/bootstrap/js/bootstrap.bundle.min.js')"></script>
+    <script src="@assetv('admin-assets/libs/simplebar/simplebar.min.js')"></script>
+    <script src="@assetv('admin-assets/libs/node-waves/waves.min.js')"></script>
+    <script src="@assetv('admin-assets/libs/feather-icons/feather.min.js')"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/super-build/ckeditor.js"></script>
-    <script src="{{ asset('admin-assets/js/customc-keditor.js') }}"></script>
-    <script src="{{ asset('admin-assets/js/pages/plugins/lord-icon-2.1.0.js') }}"></script>
-    <script src="{{ asset('admin-assets/js/app.js') }}"></script>
+    <script src="@assetv('admin-assets/js/customc-keditor.js')"></script>
+    <script src="@assetv('admin-assets/js/pages/plugins/lord-icon-2.1.0.js')"></script>
+    <script src="@assetv('admin-assets/js/app.js')"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             window.uploadUrl = @json(route('backend.admin.uploads.editor-image'));

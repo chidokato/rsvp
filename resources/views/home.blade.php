@@ -11,8 +11,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="{{ asset('admin-assets/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('frontend/css/home.css') }}" rel="stylesheet">
+    <link href="@assetv('admin-assets/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="@assetv('frontend/css/home.css')" rel="stylesheet">
 </head>
 @php
     $socialMap = collect($setting?->social ?? [])->mapWithKeys(function ($item) {
@@ -136,7 +136,7 @@
         </section>
     </main>
 
-    <script src="{{ asset('admin-assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('frontend/js/home.js') }}"></script>
+    <script src="@assetv('admin-assets/libs/bootstrap/js/bootstrap.bundle.min.js')"></script>
+    <script src="@assetv('frontend/js/home.js')"></script>
 </body>
 </html>

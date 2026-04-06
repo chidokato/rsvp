@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="{{ asset('admin-assets/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('frontend/css/thumoi-generator.css') }}" rel="stylesheet">
+    <link href="@assetv('admin-assets/css/bootstrap.min.css')" rel="stylesheet">
+    <link href="@assetv('frontend/css/thumoi-generator.css')" rel="stylesheet">
 </head>
 <body class="thumoi-generator-page voucher-page">
     <main class="generator-shell container-xl py-4 py-lg-5">
@@ -102,7 +102,7 @@
         </div>
     </main>
 
-    <script src="{{ asset('admin-assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('frontend/js/thumoi-generator.js') }}"></script>
+    <script src="@assetv('admin-assets/libs/bootstrap/js/bootstrap.bundle.min.js')"></script>
+    <script src="@assetv('frontend/js/thumoi-generator.js')"></script>
 </body>
 </html>

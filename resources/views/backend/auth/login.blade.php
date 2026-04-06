@@ -8,11 +8,11 @@
     <meta name="author" content="NhaDatVN" />
     <link rel="shortcut icon" href="{{ asset('admin-assets/images/favicon.ico') }}">
 
-    <script src="{{ asset('admin-assets/js/layout.js') }}"></script>
-    <link href="{{ asset('admin-assets/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('admin-assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('admin-assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
-    <link href="{{ asset('admin-assets/css/custom.min.css') }}" rel="stylesheet" type="text/css" />
+    <script src="@assetv('admin-assets/js/layout.js')"></script>
+    <link href="@assetv('admin-assets/css/bootstrap.min.css')" rel="stylesheet" type="text/css" />
+    <link href="@assetv('admin-assets/css/icons.min.css')" rel="stylesheet" type="text/css" />
+    <link href="@assetv('admin-assets/css/app.min.css')" rel="stylesheet" type="text/css" />
+    <link href="@assetv('admin-assets/css/custom.min.css')" rel="stylesheet" type="text/css" />
 
     <style>
         .nhadat-brand {
@@ -180,12 +180,12 @@
         </footer>
     </div>
 
-    <script src="{{ asset('admin-assets/libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ asset('admin-assets/libs/simplebar/simplebar.min.js') }}"></script>
-    <script src="{{ asset('admin-assets/libs/node-waves/waves.min.js') }}"></script>
-    <script src="{{ asset('admin-assets/libs/feather-icons/feather.min.js') }}"></script>
-    <script src="{{ asset('admin-assets/js/pages/plugins/lord-icon-2.1.0.js') }}"></script>
-    <script src="{{ asset('admin-assets/js/plugins.js') }}"></script>
-    <script src="{{ asset('admin-assets/js/pages/password-addon.init.js') }}"></script>
+    <script src="@assetv('admin-assets/libs/bootstrap/js/bootstrap.bundle.min.js')"></script>
+    <script src="@assetv('admin-assets/libs/simplebar/simplebar.min.js')"></script>
+    <script src="@assetv('admin-assets/libs/node-waves/waves.min.js')"></script>
+    <script src="@assetv('admin-assets/libs/feather-icons/feather.min.js')"></script>
+    <script src="@assetv('admin-assets/js/pages/plugins/lord-icon-2.1.0.js')"></script>
+    <script src="@assetv('admin-assets/js/plugins.js')"></script>
+    <script src="@assetv('admin-assets/js/pages/password-addon.init.js')"></script>
 </body>
 </html>
