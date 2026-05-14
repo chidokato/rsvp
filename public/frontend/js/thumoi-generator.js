@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .replace(/^-|-$/g, '');
     }
 
-    function drawInvitation(salutation, fullName, jobTitle) {
+    function drawInvitation(salutation, fullName, jobTitle, companyName) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
 
@@ -86,25 +86,40 @@ document.addEventListener('DOMContentLoaded', function () {
         var contentCenterX = 640;
         ctx.textAlign = 'center';
         ctx.fillStyle = '#ffffff';
-        ctx.font = '700 80px Montserrat, Arial, sans-serif';
+        ctx.font = '700 78px Montserrat, Arial, sans-serif';
 
-        var lines = wrapText(ctx, inviteeName, 1280);
-        var startY = 600;
-        var lineHeight = 78;
+        var lines = wrapText(ctx, inviteeName, 1180);
+        var startY = 560;
+        var lineHeight = 74;
 
         lines.forEach(function (line, index) {
             ctx.fillText(line, contentCenterX, startY + (index * lineHeight));
         });
 
+        var detailY = startY + (lines.length * lineHeight) + 28;
+
         if (jobTitle) {
             var normalizedJobTitle = jobTitle.trim().toUpperCase();
-            var jobTitleY = startY + (lines.length * lineHeight) + 12;
 
-            ctx.font = '700 50px Montserrat, Arial, sans-serif';
+            ctx.font = '700 38px Montserrat, Arial, sans-serif';
             ctx.fillStyle = 'rgba(255, 255, 255, 0.96)';
 
-            wrapText(ctx, normalizedJobTitle, 1100).forEach(function (line, index) {
-                ctx.fillText(line, contentCenterX, jobTitleY + (index * 46));
+            var jobTitleLines = wrapText(ctx, normalizedJobTitle, 1000);
+            jobTitleLines.forEach(function (line, index) {
+                ctx.fillText(line, contentCenterX, detailY + (index * 42));
+            });
+
+            detailY += (jobTitleLines.length * 42) + 10;
+        }
+
+        if (companyName) {
+            var normalizedCompanyName = companyName.trim().toUpperCase();
+
+            ctx.font = '700 34px Montserrat, Arial, sans-serif';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.96)';
+
+            wrapText(ctx, normalizedCompanyName, 980).forEach(function (line, index) {
+                ctx.fillText(line, contentCenterX, detailY + (index * 36));
             });
         }
     }
@@ -256,6 +271,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var salutation = form.querySelector('[name="salutation"]').value;
         var fullName = form.querySelector('[name="full_name"]').value.trim();
         var jobTitle = form.querySelector('[name="job_title"]').value.trim();
+        var companyName = form.querySelector('[name="company_name"]').value.trim();
 
         if (!fullName) {
             showFeedback('Vui lòng nhập Họ và Tên trước khi tạo thư mời.', 'warning');
@@ -268,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        drawInvitation(salutation, fullName, jobTitle);
+        drawInvitation(salutation, fullName, jobTitle, companyName);
         fileNameSeed = fullName;
         finishGenerate(fileNameSeed);
         showFeedback('Đã tạo thư mời thành công. Bạn có thể tải ảnh về máy.', 'success');

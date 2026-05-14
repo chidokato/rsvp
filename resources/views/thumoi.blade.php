@@ -51,6 +51,17 @@
                             >
                         </div>
 
+                        <div class="field-block">
+                            <label for="company_name" class="field-label">Công ty</label>
+                            <input
+                                id="company_name"
+                                name="company_name"
+                                type="text"
+                                class="form-control input-control"
+                                placeholder="Ví dụ: Công ty Cổ phần ABC"
+                            >
+                        </div>
+
                         <div class="action-row">
                             <button type="button" id="generate-invitation" class="btn btn-primary action-button">Tạo thư mời</button>
                             <button type="button" id="download-web" class="btn btn-outline-light action-button web-only-action" disabled>Tải ảnh</button>
