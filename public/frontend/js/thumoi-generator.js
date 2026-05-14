@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var contentCenterX = 640;
         ctx.textAlign = 'center';
         ctx.fillStyle = '#ffffff';
-        ctx.font = '700 72px Montserrat, Arial, sans-serif';
+        ctx.font = '700 80px Montserrat, Arial, sans-serif';
 
         var lines = wrapText(ctx, inviteeName, 1280);
         var startY = 600;
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var normalizedJobTitle = jobTitle.trim().toUpperCase();
             var jobTitleY = startY + (lines.length * lineHeight) + 12;
 
-            ctx.font = '700 40px Montserrat, Arial, sans-serif';
+            ctx.font = '700 50px Montserrat, Arial, sans-serif';
             ctx.fillStyle = 'rgba(255, 255, 255, 0.96)';
 
             wrapText(ctx, normalizedJobTitle, 1100).forEach(function (line, index) {
