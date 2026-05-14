@@ -23,8 +23,8 @@
                             <div class="field-block field-block-salutation">
                                 <label for="salutation" class="field-label">Danh xưng</label>
                                 <select id="salutation" name="salutation" class="form-select input-control">
-                                    <option value="Ông">Ông</option>
-                                    <option value="Bà">Bà</option>
+                                    <option value="MR.">Ông</option>
+                                    <option value="MS.">Bà</option>
                                 </select>
                             </div>
 
@@ -67,16 +67,16 @@
                     <div
                         class="invitation-preview"
                         id="invitation-preview"
-                        data-sample-src="{{ asset('frontend/images/thumoi-mau.jpg') }}"
-                        data-template-src="{{ asset('frontend/images/phoi-thumoi.jpg') }}"
+                        data-sample-src="{{ asset('frontend/images/mau-thumoi-1405.jpg') }}"
+                        data-template-src="{{ asset('frontend/images/phoi-thumoi-1405.jpg') }}"
                     >
                         <img
                             id="sample-preview"
-                            src="{{ asset('frontend/images/thumoi-mau.jpg') }}"
+                            src="{{ asset('frontend/images/mau-thumoi-1405.jpg') }}"
                             alt="Thư mời mẫu"
                             class="preview-image"
                         >
-                        <canvas id="invitation-canvas" class="preview-canvas d-none" width="1200" height="1500"></canvas>
+                        <canvas id="invitation-canvas" class="preview-canvas d-none" width="2560" height="2467"></canvas>
                     </div>
                 </div>
             </section>

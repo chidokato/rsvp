@@ -82,23 +82,30 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
 
-        var inviteeName = (salutation + ' ' + fullName).trim();
+        var inviteeName = ((salutation ? salutation + ' ' : '') + fullName).trim().toUpperCase();
+        var contentCenterX = 640;
         ctx.textAlign = 'center';
         ctx.fillStyle = '#ffffff';
-        ctx.font = '60px Montserrat, Arial, sans-serif';
+        ctx.font = '700 72px Montserrat, Arial, sans-serif';
 
-        var lines = wrapText(ctx, inviteeName, 900);
-        var startY = 395;
+        var lines = wrapText(ctx, inviteeName, 1280);
+        var startY = 600;
         var lineHeight = 78;
 
         lines.forEach(function (line, index) {
-            ctx.fillText(line, canvas.width / 2, startY + (index * lineHeight));
+            ctx.fillText(line, contentCenterX, startY + (index * lineHeight));
         });
 
         if (jobTitle) {
-            ctx.font = '500 32px Montserrat, Arial, sans-serif';
-            ctx.fillStyle = 'rgba(233, 241, 255, 0.94)';
-            ctx.fillText(jobTitle, canvas.width / 2, startY + (lines.length * lineHeight) - 24);
+            var normalizedJobTitle = jobTitle.trim().toUpperCase();
+            var jobTitleY = startY + (lines.length * lineHeight) + 12;
+
+            ctx.font = '700 40px Montserrat, Arial, sans-serif';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.96)';
+
+            wrapText(ctx, normalizedJobTitle, 1100).forEach(function (line, index) {
+                ctx.fillText(line, contentCenterX, jobTitleY + (index * 46));
+            });
         }
     }
 

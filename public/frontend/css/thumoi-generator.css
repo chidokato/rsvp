@@ -133,6 +133,15 @@
     gap: 8px;
 }
 
+.field-block-name {
+    width: 100%;
+}
+
+.field-block-name .input-control {
+    width: 100%;
+    display: block;
+}
+
 .field-row {
     display: grid;
     grid-template-columns: 180px minmax(0, 1fr);
