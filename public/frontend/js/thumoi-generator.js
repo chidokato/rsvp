@@ -22,6 +22,14 @@ document.addEventListener('DOMContentLoaded', function () {
     var generatedFileName = filePrefix + '.jpg';
     var isGenerating = false;
     var latestDataUrl = '';
+    var invitationLayout = {
+        nameX: Number(previewRoot.getAttribute('data-name-x')) || 640,
+        nameY: Number(previewRoot.getAttribute('data-name-y')) || 560,
+        nameMaxWidth: Number(previewRoot.getAttribute('data-name-max-width')) || 1180,
+        nameLineHeight: Number(previewRoot.getAttribute('data-name-line-height')) || 74,
+        nameFontSize: Number(previewRoot.getAttribute('data-name-font-size')) || 78,
+        textColor: previewRoot.getAttribute('data-text-color') || '#ffffff'
+    };
 
     function canvasToBlob() {
         return new Promise(function (resolve) {
@@ -78,50 +86,22 @@ document.addEventListener('DOMContentLoaded', function () {
             .replace(/^-|-$/g, '');
     }
 
-    function drawInvitation(salutation, fullName, jobTitle, companyName) {
+    function drawInvitation(salutation, fullName) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
 
         var inviteeName = ((salutation ? salutation + ' ' : '') + fullName).trim().toUpperCase();
-        var contentCenterX = 640;
         ctx.textAlign = 'center';
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '700 78px Montserrat, Arial, sans-serif';
+        ctx.fillStyle = invitationLayout.textColor;
+        ctx.font = '700 ' + invitationLayout.nameFontSize + 'px Montserrat, Arial, sans-serif';
 
-        var lines = wrapText(ctx, inviteeName, 1180);
-        var startY = 560;
-        var lineHeight = 74;
+        var lines = wrapText(ctx, inviteeName, invitationLayout.nameMaxWidth);
+        var startY = invitationLayout.nameY;
+        var lineHeight = invitationLayout.nameLineHeight;
 
         lines.forEach(function (line, index) {
-            ctx.fillText(line, contentCenterX, startY + (index * lineHeight));
+            ctx.fillText(line, invitationLayout.nameX, startY + (index * lineHeight));
         });
-
-        var detailY = startY + (lines.length * lineHeight) + 28;
-
-        if (jobTitle) {
-            var normalizedJobTitle = jobTitle.trim().toUpperCase();
-
-            ctx.font = '700 38px Montserrat, Arial, sans-serif';
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.96)';
-
-            var jobTitleLines = wrapText(ctx, normalizedJobTitle, 1000);
-            jobTitleLines.forEach(function (line, index) {
-                ctx.fillText(line, contentCenterX, detailY + (index * 42));
-            });
-
-            detailY += (jobTitleLines.length * 42) + 10;
-        }
-
-        if (companyName) {
-            var normalizedCompanyName = companyName.trim().toUpperCase();
-
-            ctx.font = '700 34px Montserrat, Arial, sans-serif';
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.96)';
-
-            wrapText(ctx, normalizedCompanyName, 980).forEach(function (line, index) {
-                ctx.fillText(line, contentCenterX, detailY + (index * 36));
-            });
-        }
     }
 
     function drawVoucher(apartmentCode, phoneLast4) {
@@ -270,8 +250,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var salutation = form.querySelector('[name="salutation"]').value;
         var fullName = form.querySelector('[name="full_name"]').value.trim();
-        var jobTitle = form.querySelector('[name="job_title"]').value.trim();
-        var companyName = form.querySelector('[name="company_name"]').value.trim();
 
         if (!fullName) {
             showFeedback('Vui lòng nhập Họ và Tên trước khi tạo thư mời.', 'warning');
@@ -284,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        drawInvitation(salutation, fullName, jobTitle, companyName);
+        drawInvitation(salutation, fullName);
         fileNameSeed = fullName;
         finishGenerate(fileNameSeed);
         showFeedback('Đã tạo thư mời thành công. Bạn có thể tải ảnh về máy.', 'success');
@@ -354,7 +332,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        mobileWindow.document.write('<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><title>' + generatedFileName + '</title><style>html,body{margin:0;background:#111;height:100%;display:flex;align-items:center;justify-content:center}img{max-width:100%;height:auto}</style></head><body><img src="' + latestDataUrl + '" alt="voucher"></body></html>');
+        mobileWindow.document.write('<!doctype html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><title>' + generatedFileName + '</title><style>html,body{margin:0;background:#111;height:100%;display:flex;align-items:center;justify-content:center}img{max-width:100%;height:auto}</style></head><body><img src="' + latestDataUrl + '" alt="thu-moi"></body></html>');
         mobileWindow.document.close();
         showFeedback('Đã mở ảnh cho mobile. Bạn có thể nhấn giữ để lưu vào Ảnh.', 'success');
     });

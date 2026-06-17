@@ -16,7 +16,7 @@
             <section class="form-panel">
                 <div class="form-card">
                     <h2 class="form-title">Tạo thư mời</h2>
-                    <p class="form-text">Chọn danh xưng, nhập họ và tên, thêm chức vụ rồi bấm tạo thư mời. Sau đó có thể tải ảnh đã tạo về máy.</p>
+                    <p class="form-text">Chọn danh xưng, nhập họ và tên rồi bấm tạo thư mời. Sau đó có thể tải ảnh đã tạo về máy.</p>
 
                     <form id="invitation-form" class="invitation-form" action="{{ route('thumoi') }}" method="get">
                         <div class="field-row">
@@ -40,28 +40,6 @@
                             </div>
                         </div>
 
-                        <div class="field-block">
-                            <label for="job_title" class="field-label">Chức vụ</label>
-                            <input
-                                id="job_title"
-                                name="job_title"
-                                type="text"
-                                class="form-control input-control"
-                                placeholder="Ví dụ: Giám đốc kinh doanh"
-                            >
-                        </div>
-
-                        <div class="field-block">
-                            <label for="company_name" class="field-label">Công ty</label>
-                            <input
-                                id="company_name"
-                                name="company_name"
-                                type="text"
-                                class="form-control input-control"
-                                placeholder="Ví dụ: Công ty Cổ phần ABC"
-                            >
-                        </div>
-
                         <div class="action-row">
                             <button type="button" id="generate-invitation" class="btn btn-primary action-button">Tạo thư mời</button>
                             <button type="button" id="download-web" class="btn btn-outline-light action-button web-only-action" disabled>Tải ảnh</button>
@@ -78,16 +56,29 @@
                     <div
                         class="invitation-preview"
                         id="invitation-preview"
-                        data-sample-src="{{ asset('frontend/images/mau-thumoi-1405.jpg') }}"
-                        data-template-src="{{ asset('frontend/images/phoi-thumoi-1405.jpg') }}"
+                        data-sample-src="{{ asset('frontend/images/mau.jpg') }}"
+                        data-template-src="{{ asset('frontend/images/phoi.jpg') }}"
+                        data-name-x="960"
+                        data-name-y="228"
+                        data-name-max-width="1320"
+                        data-name-line-height="64"
+                        data-name-font-size="64"
+                        data-detail-gap="20"
+                        data-job-font-size="34"
+                        data-job-line-height="38"
+                        data-job-max-width="1120"
+                        data-company-font-size="30"
+                        data-company-line-height="34"
+                        data-company-max-width="1080"
+                        data-text-color="#1662b3"
                     >
                         <img
                             id="sample-preview"
-                            src="{{ asset('frontend/images/mau-thumoi-1405.jpg') }}"
+                            src="{{ asset('frontend/images/mau.jpg') }}"
                             alt="Thư mời mẫu"
                             class="preview-image"
                         >
-                        <canvas id="invitation-canvas" class="preview-canvas d-none" width="2560" height="2467"></canvas>
+                        <canvas id="invitation-canvas" class="preview-canvas d-none" width="1920" height="2400"></canvas>
                     </div>
                 </div>
             </section>
