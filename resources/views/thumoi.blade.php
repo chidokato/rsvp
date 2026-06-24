@@ -9,8 +9,55 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="@assetv('admin-assets/css/bootstrap.min.css')" rel="stylesheet">
     <link href="@assetv('frontend/css/thumoi-generator.css')" rel="stylesheet">
+    <style>
+        #zalo-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 99999;
+            color: #fff;
+            text-align: center;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+            font-family: "Montserrat", sans-serif;
+        }
+        #zalo-overlay.active {
+            display: flex;
+        }
+        .zalo-arrow {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 50px;
+            animation: bounceTopRight 0.8s infinite alternate;
+        }
+        .zalo-text {
+            margin-top: 120px;
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 1.6;
+        }
+        @keyframes bounceTopRight {
+            from { transform: translate(0, 0); }
+            to { transform: translate(10px, -10px); }
+        }
+    </style>
 </head>
 <body class="thumoi-generator-page">
+    <div id="zalo-overlay">
+        <div class="zalo-arrow">↗️</div>
+        <div class="zalo-text">
+            Để tạo và tải ảnh thành công,<br><br>
+            Bạn vui lòng bấm vào biểu tượng <strong>dấu 3 chấm (...)</strong> ở góc trên bên phải màn hình<br><br>
+            Sau đó chọn <strong>"Mở bằng trình duyệt"</strong> (Mở bằng Safari / Chrome).
+        </div>
+    </div>
+
     <main class="generator-shell container-xl py-4 py-lg-5">
         <div class="generator-layout">
             <section class="form-panel">
@@ -87,5 +134,11 @@
 
     <script src="@assetv('admin-assets/libs/bootstrap/js/bootstrap.bundle.min.js')"></script>
     <script src="@assetv('frontend/js/thumoi-generator.js')"></script>
+    <script>
+        var ua = navigator.userAgent || navigator.vendor || window.opera;
+        if (ua.indexOf("Zalo") > -1 || ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1) {
+            document.getElementById('zalo-overlay').classList.add('active');
+        }
+    </script>
 </body>
 </html>
