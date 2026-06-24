@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
 
-        var inviteeName = ((salutation ? salutation + ' ' : '') + fullName).trim().toUpperCase();
+        var inviteeName = ((salutation ? salutation + ' ' : '') + fullName.trim().toUpperCase()).trim();
         ctx.textAlign = 'center';
         ctx.fillStyle = invitationLayout.textColor;
         ctx.font = '700 ' + invitationLayout.nameFontSize + 'px Montserrat, Arial, sans-serif';

@@ -1,3 +1,5 @@
+.bg-none{background: none !important; box-shadow: none !important;}
+
 .thumoi-generator-page {
     margin: 0;
     min-height: 100vh;
@@ -33,9 +35,11 @@
     width: 100%;
 }
 
-.preview-card,
 .form-card {
     height: 100%;
+}
+
+.form-card {
     border-radius: 28px;
     border: 1px solid rgba(255, 255, 255, 0.12);
     background: rgba(7, 28, 72, 0.48);
@@ -43,7 +47,6 @@
     box-shadow: 0 30px 80px rgba(2, 12, 38, 0.26);
 }
 
-.voucher-page .preview-card,
 .voucher-page .form-card {
     border: 1px solid rgba(228, 182, 141, 0.16);
     background: linear-gradient(180deg, rgba(84, 29, 20, 0.84), rgba(45, 16, 12, 0.88));
@@ -98,15 +101,9 @@
     position: relative;
     border-radius: 22px;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.12);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .voucher-page .invitation-preview {
-    background: rgba(255, 240, 228, 0.06);
-    box-shadow:
-        inset 0 1px 0 rgba(255, 244, 236, 0.08),
-        0 18px 40px rgba(27, 7, 5, 0.24);
 }
 
 .preview-image,
@@ -114,6 +111,8 @@
     display: block;
     width: 100%;
     height: auto;
+    max-height: calc(100vh - 140px);
+    object-fit: contain;
 }
 
 .form-card {

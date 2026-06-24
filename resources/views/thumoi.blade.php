@@ -23,8 +23,8 @@
                             <div class="field-block field-block-salutation">
                                 <label for="salutation" class="field-label">Danh xưng</label>
                                 <select id="salutation" name="salutation" class="form-select input-control">
-                                    <option value="MR.">Ông</option>
-                                    <option value="MS.">Bà</option>
+                                    <option value="Mr.">Ông</option>
+                                    <option value="Ms.">Bà</option>
                                 </select>
                             </div>
 
@@ -51,18 +51,18 @@
                 </div>
             </section>
 
-            <section class="preview-panel">
-                <div class="preview-card">
+            <section class="preview-panel bg-none">
+                <div class="preview-card bg-none">
                     <div
-                        class="invitation-preview"
+                        class="invitation-preview bg-none"
                         id="invitation-preview"
-                        data-sample-src="{{ asset('frontend/images/mau.jpg') }}"
-                        data-template-src="{{ asset('frontend/images/phoi.jpg') }}"
+                        data-sample-src="{{ asset('frontend/images/thumoi2406.png') }}"
+                        data-template-src="{{ asset('frontend/images/thumoi2406.png') }}"
                         data-name-x="960"
-                        data-name-y="228"
+                        data-name-y="1490"
                         data-name-max-width="1320"
-                        data-name-line-height="64"
-                        data-name-font-size="64"
+                        data-name-line-height="110"
+                        data-name-font-size="100"
                         data-detail-gap="20"
                         data-job-font-size="34"
                         data-job-line-height="38"
@@ -70,15 +70,15 @@
                         data-company-font-size="30"
                         data-company-line-height="34"
                         data-company-max-width="1080"
-                        data-text-color="#1662b3"
+                        data-text-color="#ffffff"
                     >
                         <img
                             id="sample-preview"
-                            src="{{ asset('frontend/images/mau.jpg') }}"
+                            src="{{ asset('frontend/images/thumoi2406.png') }}"
                             alt="Thư mời mẫu"
                             class="preview-image"
                         >
-                        <canvas id="invitation-canvas" class="preview-canvas d-none" width="1920" height="2400"></canvas>
+                        <canvas id="invitation-canvas" class="preview-canvas d-none" width="1920" height="3039"></canvas>
                     </div>
                 </div>
             </section>
