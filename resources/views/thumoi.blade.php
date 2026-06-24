@@ -82,7 +82,7 @@
                                     name="full_name"
                                     type="text"
                                     class="form-control input-control"
-                                    placeholder="Ví dụ: Nguyễn Văn An"
+                                    placeholder="Ví dụ: Lê Thị Hằng"
                                 >
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                                 name="job_title"
                                 type="text"
                                 class="form-control input-control"
-                                placeholder="Ví dụ: Tổng Giám đốc"
+                                placeholder="Ví dụ: Tổng Giám Đốc INDOCHINE"
                             >
                         </div>
 
@@ -118,7 +118,7 @@
                         data-template-src="{{ asset('frontend/images/thumoi2406.png') }}"
                         data-name-x="960"
                         data-name-y="1440"
-                        data-name-max-width="1320"
+                        data-name-max-width="1700"
                         data-name-line-height="110"
                         data-name-font-size="100"
                         data-detail-gap="20"
