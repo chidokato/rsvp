@@ -87,6 +87,17 @@
                             </div>
                         </div>
 
+                        <div class="field-block" style="margin-top: 18px;">
+                            <label for="job_title" class="field-label">Chức vụ (Tùy chọn)</label>
+                            <input
+                                id="job_title"
+                                name="job_title"
+                                type="text"
+                                class="form-control input-control"
+                                placeholder="Ví dụ: Tổng Giám đốc"
+                            >
+                        </div>
+
                         <div class="action-row">
                             <button type="button" id="generate-invitation" class="btn btn-primary action-button">Tạo thư mời</button>
                             <button type="button" id="download-web" class="btn btn-outline-light action-button web-only-action" disabled>Tải ảnh</button>
@@ -106,7 +117,7 @@
                         data-sample-src="{{ asset('frontend/images/thumoi2406.png') }}"
                         data-template-src="{{ asset('frontend/images/thumoi2406.png') }}"
                         data-name-x="960"
-                        data-name-y="1490"
+                        data-name-y="1440"
                         data-name-max-width="1320"
                         data-name-line-height="110"
                         data-name-font-size="100"

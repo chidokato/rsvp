@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .replace(/^-|-$/g, '');
     }
 
-    function drawInvitation(salutation, fullName) {
+    function drawInvitation(salutation, fullName, jobTitle) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
 
@@ -102,6 +102,18 @@ document.addEventListener('DOMContentLoaded', function () {
         lines.forEach(function (line, index) {
             ctx.fillText(line, invitationLayout.nameX, startY + (index * lineHeight));
         });
+
+        if (jobTitle) {
+            var jobFontSize = Math.round(invitationLayout.nameFontSize * 0.55);
+            var jobLineHeight = Math.round(lineHeight * 0.7);
+            ctx.font = '500 ' + jobFontSize + 'px Montserrat, Arial, sans-serif';
+            var jobY = startY + ((lines.length - 1) * lineHeight) + jobFontSize + 24;
+            var jobLines = wrapText(ctx, jobTitle.trim(), invitationLayout.nameMaxWidth);
+            
+            jobLines.forEach(function (line, index) {
+                ctx.fillText(line, invitationLayout.nameX, jobY + (index * jobLineHeight));
+            });
+        }
     }
 
     function drawVoucher(apartmentCode, phoneLast4) {
@@ -250,6 +262,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var salutation = form.querySelector('[name="salutation"]').value;
         var fullName = form.querySelector('[name="full_name"]').value.trim();
+        var jobTitleEl = form.querySelector('[name="job_title"]');
+        var jobTitle = jobTitleEl ? jobTitleEl.value.trim() : '';
 
         if (!fullName) {
             showFeedback('Vui lòng nhập Họ và Tên trước khi tạo thư mời.', 'warning');
@@ -262,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        drawInvitation(salutation, fullName);
+        drawInvitation(salutation, fullName, jobTitle);
         fileNameSeed = fullName;
         finishGenerate(fileNameSeed);
         showFeedback('Đã tạo thư mời thành công. Bạn có thể tải ảnh về máy.', 'success');
