@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         ctx.fillStyle = invitationLayout.textColor;
         var nameFont = '700 ' + invitationLayout.nameFontSize + 'px Montserrat, Arial, sans-serif';
-        var salutationFont = 'italic ' + Math.round(invitationLayout.nameFontSize * 1.5) + 'px Ghiocity, sans-serif';
+        var salutationFont = 'italic ' + Math.round(invitationLayout.nameFontSize * 1) + 'px Ghiocity, sans-serif';
 
         ctx.font = nameFont;
         var nameWidth = ctx.measureText(nameText).width;
