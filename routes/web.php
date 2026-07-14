@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::view('/', 'thumoi')->name('home');
+Route::view('/tao-hang-loat', 'hangloat')->name('hangloat');
 Route::view('/voucher', 'voucher')->name('voucher');
 Route::post('/voucher', [VoucherController::class, 'store'])->name('voucher.store');
 Route::post('/rsvp', [HomeController::class, 'storeRsvp'])->name('home.rsvp');
