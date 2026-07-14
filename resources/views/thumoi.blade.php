@@ -10,6 +10,12 @@
     <link href="@assetv('admin-assets/css/bootstrap.min.css')" rel="stylesheet">
     <link href="@assetv('frontend/css/thumoi-generator.css')" rel="stylesheet">
     <style>
+        @font-face {
+            font-family: 'Ghiocity';
+            src: url('{{ asset("frontend/font/GHIOCITYANDDHISTHES-ITALIC.OTF") }}') format('opentype');
+            font-weight: normal;
+            font-style: italic;
+        }
         #zalo-overlay {
             display: none;
             position: fixed;
@@ -46,9 +52,54 @@
             from { transform: translate(0, 0); }
             to { transform: translate(10px, -10px); }
         }
+        .countdown-item {
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 15px 20px;
+            min-width: 85px;
+            color: #6cf; /* Vibrant cyan */
+            border: 1px solid rgba(102, 204, 255, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 0 15px rgba(102, 204, 255, 0.3);
+            text-align: center;
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        .countdown-item:hover {
+            transform: translateY(-5px);
+        }
+        .countdown-item .fs-3 {
+            font-size: 2.2rem !important;
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .countdown-item small {
+            font-size: 0.85rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-top: 5px;
+            display: block;
+        }
+        .countdown-container {
+            margin-top: 3.5rem !important;
+            padding-bottom: 1rem;
+        }
+        .countdown-container > p {
+            font-size: 1.1rem !important;
+            font-weight: 600;
+            color: #fff !important;
+            opacity: 1 !important;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1.25rem !important;
+        }
     </style>
 </head>
 <body class="thumoi-generator-page">
+    <!-- Preload custom font for Canvas -->
+    <div style="font-family: 'Ghiocity'; position: absolute; visibility: hidden;">Preload</div>
     <div id="zalo-overlay">
         <div class="zalo-arrow">↗️</div>
         <div class="zalo-text">
@@ -65,7 +116,7 @@
                     <h2 class="form-title">Tạo thư mời</h2>
                     <p class="form-text">Chọn danh xưng, nhập họ và tên rồi bấm tạo thư mời. Sau đó có thể tải ảnh đã tạo về máy.</p>
 
-                    <form id="invitation-form" class="invitation-form" action="{{ route('thumoi') }}" method="get">
+                    <form id="invitation-form" class="invitation-form" action="{{ route('home') }}" method="get">
                         <div class="field-row">
                             <div class="field-block field-block-salutation">
                                 <label for="salutation" class="field-label">Danh xưng</label>
@@ -106,6 +157,28 @@
                     </form>
 
                     <div id="generator-feedback" class="alert alert-warning mt-4 mb-0 d-none" role="alert"></div>
+                    
+                    <div class="countdown-container mt-5 text-center">
+                        <p class="mb-3">Sự kiện sẽ diễn ra sau:</p>
+                        <div id="countdown" class="d-flex justify-content-center gap-3">
+                            <div class="countdown-item">
+                                <span id="cd-days" class="d-block fs-3 fw-bold">00</span>
+                                <small>Ngày</small>
+                            </div>
+                            <div class="countdown-item">
+                                <span id="cd-hours" class="d-block fs-3 fw-bold">00</span>
+                                <small>Giờ</small>
+                            </div>
+                            <div class="countdown-item">
+                                <span id="cd-minutes" class="d-block fs-3 fw-bold">00</span>
+                                <small>Phút</small>
+                            </div>
+                            <div class="countdown-item">
+                                <span id="cd-seconds" class="d-block fs-3 fw-bold">00</span>
+                                <small>Giây</small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -114,13 +187,13 @@
                     <div
                         class="invitation-preview bg-none"
                         id="invitation-preview"
-                        data-sample-src="{{ asset('frontend/images/thumoi2406.png') }}"
-                        data-template-src="{{ asset('frontend/images/thumoi2406.png') }}"
-                        data-name-x="960"
-                        data-name-y="1440"
-                        data-name-max-width="1700"
-                        data-name-line-height="110"
-                        data-name-font-size="100"
+                        data-sample-src="{{ asset('frontend/images/mau.jpg') }}"
+                        data-template-src="{{ asset('frontend/images/phoi.jpg') }}"
+                        data-name-x="864"
+                        data-name-y="460"
+                        data-name-max-width="1500"
+                        data-name-line-height="90"
+                        data-name-font-size="80"
                         data-detail-gap="20"
                         data-job-font-size="34"
                         data-job-line-height="38"
@@ -132,11 +205,11 @@
                     >
                         <img
                             id="sample-preview"
-                            src="{{ asset('frontend/images/thumoi2406.png') }}"
+                            src="{{ asset('frontend/images/mau.jpg') }}"
                             alt="Thư mời mẫu"
                             class="preview-image"
                         >
-                        <canvas id="invitation-canvas" class="preview-canvas d-none" width="1920" height="3039"></canvas>
+                        <canvas id="invitation-canvas" class="preview-canvas d-none" width="1728" height="2160"></canvas>
                     </div>
                 </div>
             </section>
@@ -150,6 +223,29 @@
         if (ua.indexOf("Zalo") > -1 || ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1) {
             document.getElementById('zalo-overlay').classList.add('active');
         }
+
+        // Countdown timer
+        var countDownDate = new Date("2026-07-18T15:30:00").getTime();
+        var x = setInterval(function() {
+            var now = new Date().getTime();
+            var distance = countDownDate - now;
+
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("countdown").innerHTML = "<div class='text-white fw-bold fs-5'>Sự kiện đang diễn ra!</div>";
+                return;
+            }
+
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("cd-days").innerText = days < 10 ? '0' + days : days;
+            document.getElementById("cd-hours").innerText = hours < 10 ? '0' + hours : hours;
+            document.getElementById("cd-minutes").innerText = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById("cd-seconds").innerText = seconds < 10 ? '0' + seconds : seconds;
+        }, 1000);
     </script>
 </body>
 </html>

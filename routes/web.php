@@ -23,8 +23,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::view('/thumoi', 'thumoi')->name('thumoi');
+Route::view('/', 'thumoi')->name('home');
 Route::view('/voucher', 'voucher')->name('voucher');
 Route::post('/voucher', [VoucherController::class, 'store'])->name('voucher.store');
 Route::post('/rsvp', [HomeController::class, 'storeRsvp'])->name('home.rsvp');

@@ -90,24 +90,61 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
 
-        var inviteeName = ((salutation ? salutation + ' ' : '') + fullName.trim().toUpperCase()).trim();
-        ctx.textAlign = 'center';
-        ctx.fillStyle = invitationLayout.textColor;
-        ctx.font = '700 ' + invitationLayout.nameFontSize + 'px Montserrat, Arial, sans-serif';
+        var nameText = fullName.trim().toUpperCase();
+        var salutationText = salutation ? salutation.trim() + ' ' : '';
 
-        var lines = wrapText(ctx, inviteeName, invitationLayout.nameMaxWidth);
+        ctx.fillStyle = invitationLayout.textColor;
+        var nameFont = '700 ' + invitationLayout.nameFontSize + 'px Montserrat, Arial, sans-serif';
+        var salutationFont = 'italic ' + Math.round(invitationLayout.nameFontSize * 1.5) + 'px Ghiocity, sans-serif';
+
+        ctx.font = nameFont;
+        var nameWidth = ctx.measureText(nameText).width;
+        
+        ctx.font = salutationFont;
+        var salWidth = ctx.measureText(salutationText).width;
+
         var startY = invitationLayout.nameY;
         var lineHeight = invitationLayout.nameLineHeight;
+        var linesLength = 1;
 
-        lines.forEach(function (line, index) {
-            ctx.fillText(line, invitationLayout.nameX, startY + (index * lineHeight));
-        });
+        if (salWidth + nameWidth <= invitationLayout.nameMaxWidth) {
+            var totalWidth = salWidth + nameWidth;
+            var startX = invitationLayout.nameX - (totalWidth / 2);
+            
+            ctx.textAlign = 'left';
+            ctx.font = salutationFont;
+            ctx.fillText(salutationText, startX, startY);
+            
+            ctx.font = nameFont;
+            ctx.fillText(nameText, startX + salWidth, startY);
+        } else {
+            ctx.font = nameFont;
+            var lines = wrapText(ctx, nameText, invitationLayout.nameMaxWidth);
+            
+            var firstLineNameWidth = ctx.measureText(lines[0]).width;
+            var firstLineTotalWidth = salWidth + firstLineNameWidth;
+            var startX = invitationLayout.nameX - (firstLineTotalWidth / 2);
+            
+            ctx.textAlign = 'left';
+            ctx.font = salutationFont;
+            ctx.fillText(salutationText, startX, startY);
+            
+            ctx.font = nameFont;
+            ctx.fillText(lines[0], startX + salWidth, startY);
+            
+            ctx.textAlign = 'center';
+            for (var i = 1; i < lines.length; i++) {
+                ctx.fillText(lines[i], invitationLayout.nameX, startY + (i * lineHeight));
+            }
+            linesLength = lines.length;
+        }
 
         if (jobTitle) {
             var jobFontSize = Math.round(invitationLayout.nameFontSize * 0.55);
             var jobLineHeight = Math.round(lineHeight * 0.7);
+            ctx.textAlign = 'center';
             ctx.font = '500 ' + jobFontSize + 'px Montserrat, Arial, sans-serif';
-            var jobY = startY + ((lines.length - 1) * lineHeight) + jobFontSize + 24;
+            var jobY = startY + ((linesLength - 1) * lineHeight) + jobFontSize + 24;
             var jobLines = wrapText(ctx, jobTitle.trim(), invitationLayout.nameMaxWidth);
             
             jobLines.forEach(function (line, index) {
