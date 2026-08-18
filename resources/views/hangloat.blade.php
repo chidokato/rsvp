@@ -75,12 +75,13 @@
                     <div
                         class="invitation-preview bg-none"
                         id="invitation-preview"
-                        data-template-src="{{ asset('frontend/images/phoi.jpg') }}"
-                        data-name-x="864"
-                        data-name-y="460"
-                        data-name-max-width="1500"
-                        data-name-line-height="90"
-                        data-name-font-size="80"
+                        data-template-src="{{ asset('frontend/images/phoi1.jpg') }}"
+                        data-name-x="1000"
+                        data-name-y="895"
+                        data-name-rotate="-4"
+                        data-name-max-width="1200"
+                        data-name-line-height="48"
+                        data-name-font-size="40"
                         data-detail-gap="20"
                         data-job-font-size="34"
                         data-job-line-height="38"
@@ -88,11 +89,11 @@
                         data-company-font-size="30"
                         data-company-line-height="34"
                         data-company-max-width="1080"
-                        data-text-color="#ffffff"
+                        data-text-color="#02478a"
                     >
                         <img
                             id="sample-preview"
-                            src="{{ asset('frontend/images/mau.jpg') }}"
+                            src="{{ asset('frontend/images/mau1.jpg') }}"
                             alt="Thư mời mẫu"
                             class="preview-image"
                         >
