@@ -80,8 +80,11 @@
                             <div class="field-block field-block-salutation">
                                 <label for="salutation" class="field-label">Danh xưng</label>
                                 <select id="salutation" name="salutation" class="form-select input-control">
-                                    <option value="Mr.">Ông</option>
-                                    <option value="Ms.">Bà</option>
+                                    <option value="Ông">Ông</option>
+                                    <option value="Bà">Bà</option>
+                                    <option value="Anh">Anh</option>
+                                    <option value="Chị">Chị</option>
+                                    <option value="">(Không danh xưng)</option>
                                 </select>
                             </div>
 
@@ -126,30 +129,27 @@
                     <div
                         class="invitation-preview bg-none"
                         id="invitation-preview"
-                        data-sample-src="{{ asset('frontend/images/mau1.jpg') }}"
-                        data-template-src="{{ asset('frontend/images/phoi1.jpg') }}"
-                        data-name-x="1120"
-                        data-name-y="820"
-                        data-name-rotate="-3.5"
-                        data-name-max-width="1200"
-                        data-name-line-height="48"
-                        data-name-font-size="40"
-                        data-detail-gap="20"
-                        data-job-font-size="34"
-                        data-job-line-height="38"
-                        data-job-max-width="1120"
-                        data-company-font-size="30"
-                        data-company-line-height="34"
-                        data-company-max-width="1080"
-                        data-text-color="#02478a"
+                        data-sample-src="{{ asset('frontend/images/thumoi2210-mau.jpg') }}"
+                        data-template-src="{{ asset('frontend/images/thumoi2210-phoi.png') }}"
+                        data-name-x="960"
+                        data-name-y="460"
+                        data-name-rotate="0"
+                        data-name-max-width="1500"
+                        data-name-line-height="88"
+                        data-name-font-size="74"
+                        data-job-max-width="1450"
+                        data-job-line-height="56"
+                        data-job-font-size="44"
+                        data-gap-center="100"
+                        data-text-color="#854d1c"
                     >
                         <img
                             id="sample-preview"
-                            src="{{ asset('frontend/images/mau1.jpg') }}"
+                            src="{{ asset('frontend/images/thumoi2210-mau.jpg') }}"
                             alt="Thư mời mẫu"
                             class="preview-image"
                         >
-                        <canvas id="invitation-canvas" class="preview-canvas d-none" width="1728" height="2160"></canvas>
+                        <canvas id="invitation-canvas" class="preview-canvas d-none" width="1920" height="2803"></canvas>
                     </div>
                 </div>
             </section>

@@ -14,6 +14,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var templateImage = new Image();
     templateImage.crossOrigin = 'anonymous';
+    templateImage.onload = function () {
+        if (templateImage.naturalWidth && templateImage.naturalHeight) {
+            canvas.width = templateImage.naturalWidth;
+            canvas.height = templateImage.naturalHeight;
+        }
+    };
     templateImage.src = previewRoot.getAttribute('data-template-src');
 
     var ctx = canvas.getContext('2d');
@@ -23,13 +29,17 @@ document.addEventListener('DOMContentLoaded', function () {
     var isGenerating = false;
     var latestDataUrl = '';
     var invitationLayout = {
-        nameX: Number(previewRoot.getAttribute('data-name-x')) || 864,
-        nameY: Number(previewRoot.getAttribute('data-name-y')) || 930,
+        nameX: Number(previewRoot.getAttribute('data-name-x')) || 960,
+        nameY: Number(previewRoot.getAttribute('data-name-y')) || 460,
         nameRotate: Number(previewRoot.getAttribute('data-name-rotate')) || 0,
-        nameMaxWidth: Number(previewRoot.getAttribute('data-name-max-width')) || 1200,
-        nameLineHeight: Number(previewRoot.getAttribute('data-name-line-height')) || 48,
-        nameFontSize: Number(previewRoot.getAttribute('data-name-font-size')) || 40,
-        textColor: previewRoot.getAttribute('data-text-color') || '#02478a'
+        nameMaxWidth: Number(previewRoot.getAttribute('data-name-max-width')) || 1500,
+        nameLineHeight: Number(previewRoot.getAttribute('data-name-line-height')) || 88,
+        nameFontSize: Number(previewRoot.getAttribute('data-name-font-size')) || 74,
+        jobMaxWidth: Number(previewRoot.getAttribute('data-job-max-width')) || 1450,
+        jobLineHeight: Number(previewRoot.getAttribute('data-job-line-height')) || 56,
+        jobFontSize: Number(previewRoot.getAttribute('data-job-font-size')) || 44,
+        gapCenter: Number(previewRoot.getAttribute('data-gap-center')) || 100,
+        textColor: previewRoot.getAttribute('data-text-color') || '#854d1c'
     };
 
     function canvasToBlob() {
@@ -91,33 +101,54 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
 
-        var fullText = '';
-        if (salutation) {
-            fullText += salutation.trim() + ' ';
+        var nameFull = '';
+        if (salutation && salutation.trim()) {
+            nameFull += salutation.trim() + ' ';
         }
-        fullText += fullName.trim();
-        if (jobTitle) {
-            fullText += ' - ' + jobTitle.trim();
-        }
-        fullText = fullText.toUpperCase();
+        nameFull += (fullName || '').trim();
+        nameFull = nameFull.toUpperCase();
+
+        var jobFull = (jobTitle || '').trim().toUpperCase();
 
         ctx.fillStyle = invitationLayout.textColor;
-        var nameFont = '700 ' + invitationLayout.nameFontSize + 'px Montserrat, Arial, sans-serif';
-
-        ctx.font = nameFont;
-        
-        var startY = invitationLayout.nameY;
-        var lineHeight = invitationLayout.nameLineHeight;
-
-        var lines = wrapText(ctx, fullText, invitationLayout.nameMaxWidth);
-        
-        ctx.save();
-        ctx.translate(invitationLayout.nameX, startY);
-        ctx.rotate(invitationLayout.nameRotate * Math.PI / 180);
         ctx.textAlign = 'center';
-        for (var i = 0; i < lines.length; i++) {
-            ctx.fillText(lines[i], 0, i * lineHeight);
+        ctx.textBaseline = 'middle';
+
+        ctx.font = '700 ' + invitationLayout.nameFontSize + 'px Montserrat, Arial, sans-serif';
+        var nameLines = wrapText(ctx, nameFull, invitationLayout.nameMaxWidth);
+
+        var jobLines = [];
+        if (jobFull) {
+            ctx.font = '600 ' + invitationLayout.jobFontSize + 'px Montserrat, Arial, sans-serif';
+            jobLines = wrapText(ctx, jobFull, invitationLayout.jobMaxWidth);
         }
+
+        var N = nameLines.length;
+        var M = jobLines.length;
+        var span = (N - 1) * invitationLayout.nameLineHeight + (M > 0 ? invitationLayout.gapCenter : 0) + (M > 0 ? (M - 1) * invitationLayout.jobLineHeight : 0);
+        var firstNameOffsetY = - (span / 2);
+
+        ctx.save();
+        ctx.translate(invitationLayout.nameX, invitationLayout.nameY);
+        if (invitationLayout.nameRotate) {
+            ctx.rotate(invitationLayout.nameRotate * Math.PI / 180);
+        }
+
+        ctx.font = '700 ' + invitationLayout.nameFontSize + 'px Montserrat, Arial, sans-serif';
+        for (var i = 0; i < N; i++) {
+            var y = firstNameOffsetY + (i * invitationLayout.nameLineHeight);
+            ctx.fillText(nameLines[i], 0, y);
+        }
+
+        if (M > 0) {
+            ctx.font = '600 ' + invitationLayout.jobFontSize + 'px Montserrat, Arial, sans-serif';
+            var firstJobOffsetY = firstNameOffsetY + (N - 1) * invitationLayout.nameLineHeight + invitationLayout.gapCenter;
+            for (var j = 0; j < M; j++) {
+                var yJob = firstJobOffsetY + (j * invitationLayout.jobLineHeight);
+                ctx.fillText(jobLines[j], 0, yJob);
+            }
+        }
+
         ctx.restore();
     }
 
@@ -265,14 +296,18 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        var salutation = form.querySelector('[name="salutation"]').value;
-        var fullName = form.querySelector('[name="full_name"]').value.trim();
+        var salutationEl = form.querySelector('[name="salutation"]');
+        var salutation = salutationEl ? salutationEl.value : '';
+        var fullNameInput = form.querySelector('[name="full_name"]');
+        var fullName = fullNameInput ? fullNameInput.value.trim() : '';
         var jobTitleEl = form.querySelector('[name="job_title"]');
         var jobTitle = jobTitleEl ? jobTitleEl.value.trim() : '';
 
         if (!fullName) {
             showFeedback('Vui lòng nhập Họ và Tên trước khi tạo thư mời.', 'warning');
-            form.querySelector('[name="full_name"]').focus();
+            if (fullNameInput) {
+                fullNameInput.focus();
+            }
             return;
         }
 
@@ -281,10 +316,18 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        drawInvitation(salutation, fullName, jobTitle);
-        fileNameSeed = fullName;
-        finishGenerate(fileNameSeed);
-        showFeedback('Đã tạo thư mời thành công. Bạn có thể tải ảnh về máy.', 'success');
+        function executeDraw() {
+            drawInvitation(salutation, fullName, jobTitle);
+            fileNameSeed = fullName;
+            finishGenerate(fileNameSeed);
+            showFeedback('Đã tạo thư mời thành công. Bạn có thể tải ảnh về máy.', 'success');
+        }
+
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(executeDraw);
+        } else {
+            executeDraw();
+        }
     }
 
     function bindTap(button, handler) {
